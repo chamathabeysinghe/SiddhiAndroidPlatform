@@ -24,8 +24,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import org.wso2.siddhiservice.AppManager;
-import org.wso2.siddhiservice.IRequestController;
 
 public class SiddhiAppService extends Service {
 

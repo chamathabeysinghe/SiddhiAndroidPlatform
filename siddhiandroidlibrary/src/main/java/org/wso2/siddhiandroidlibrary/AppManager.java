@@ -19,9 +19,7 @@ package org.wso2.siddhiandroidlibrary;
 
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
-import org.wso2.siddhiservice.output.BroadcastIntentSink;
-import org.wso2.siddhiservice.sensors.proximity.ProximitySensorSource;
-import org.wso2.siddhiservice.sensors.temperature.TemperatureSensorSource;
+
 
 import java.util.HashMap;
 
@@ -36,9 +34,9 @@ public class AppManager {
     public AppManager(){
         siddhiAppList=new HashMap<>();
         this.siddhiManager=new SiddhiManager();
-        siddhiManager.setExtension("source:proximity",ProximitySensorSource.class);
-        siddhiManager.setExtension("source:temperature",TemperatureSensorSource.class);
-        siddhiManager.setExtension("sink:broadcast", BroadcastIntentSink.class);
+//        siddhiManager.setExtension("source:proximity",ProximitySensorSource.class);
+//        siddhiManager.setExtension("source:temperature",TemperatureSensorSource.class);
+//        siddhiManager.setExtension("sink:broadcast", BroadcastIntentSink.class);
     }
 
     /**

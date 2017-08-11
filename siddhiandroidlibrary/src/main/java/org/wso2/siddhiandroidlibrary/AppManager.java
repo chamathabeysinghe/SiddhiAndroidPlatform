@@ -19,8 +19,6 @@ package org.wso2.siddhiandroidlibrary;
 
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
-
-
 import java.util.HashMap;
 
 

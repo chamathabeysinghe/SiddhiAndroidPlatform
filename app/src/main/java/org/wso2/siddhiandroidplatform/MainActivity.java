@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
     private String inStreamDefinition = "" +
             "@app:name('foo2')" +
-            "@source(type='humidity', @map(type='passThrough'))" +
-            "define stream streamTemperature ( sensor string, timestamp long, accuracy int,value float);" +
-            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
-            "define stream broadcastOutputStream (value float); " +
-            "from streamTemperature select value insert into broadcastOutputStream";
+            "@source(type='broadcast-receiver', identifier='"+Intent.ACTION_AIRPLANE_MODE_CHANGED+"' , @map(type='passThrough'))" +
+            "define stream streamTemperature ( sensor string, timestamp bool);" +
+            "@sink(type='notification' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
+            "define stream broadcastOutputStream ( sensor string, timestamp bool); " +
+            "from streamTemperature select sensor,timestamp insert into broadcastOutputStream";
 
 //    private String inStreamDefinition = "" +
 //            "@app:name('foo2')" +

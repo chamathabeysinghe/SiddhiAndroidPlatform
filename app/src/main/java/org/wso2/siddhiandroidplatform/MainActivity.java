@@ -17,9 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.wso2.siddhiandroidlibrary.IRequestController;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,21 +28,21 @@ public class MainActivity extends AppCompatActivity {
 
     private DataUpdateReceiver dataUpdateReceiver;
 
-    private String inStreamDefinition = "" +
-            "@app:name('foo2')" +
-            "@source(type='broadcast-receiver', identifier='"+Intent.ACTION_AIRPLANE_MODE_CHANGED+"' , @map(type='passThrough'))" +
-            "define stream streamTemperature ( sensor string, timestamp bool);" +
-            "@sink(type='notification' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
-            "define stream broadcastOutputStream ( sensor string, timestamp bool); " +
-            "from streamTemperature select sensor,timestamp insert into broadcastOutputStream";
-
 //    private String inStreamDefinition = "" +
 //            "@app:name('foo2')" +
-//            "@source(type='accelerometer', @map(type='passThrough'))" +
-//            "define stream streamTemperature ( sensor string, timestamp long, accuracy int,value float);" +
+//            "@source(type='temperature' , @map(type='passThrough'))" +
+//            "define stream streamTemperature ( sensor string, timestamp string, data string);" +
 //            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
-//            "define stream broadcastOutputStream (sensor string, timestamp long, accuracy int,value float); " +
-//            "from streamTemperature select * insert into broadcastOutputStream";
+//            "define stream broadcastOutputStream ( sensor string, timestamp string, data string); " +
+//            "from streamTemperature select sensor,timestamp,data insert into broadcastOutputStream";
+
+    private String inStreamDefinition = "" +
+            "@app:name('foo2')" +
+            "@source(type='temperature', @map(type='passThrough'))" +
+            "define stream streamTemperature ( sensor string, timestamp long, accuracy int,value float);" +
+            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
+            "define stream broadcastOutputStream (sensor string, timestamp long, accuracy int,value float); " +
+            "from streamTemperature select * insert into broadcastOutputStream";
 
 
     private ListView listView;

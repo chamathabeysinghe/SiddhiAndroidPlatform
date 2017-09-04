@@ -38,10 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
     private String inStreamDefinition = "" +
             "@app:name('foo2')" +
-            "@source(type='temperature', @map(type='passThrough'))" +
-            "define stream streamTemperature ( sensor string, timestamp long, accuracy int,value float);" +
-            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
-            "define stream broadcastOutputStream (sensor string, timestamp long, accuracy int,value float); " +
+            "@source(type='proximity', @map(type='keyvalue',fail.on.missing.attribute='false'," +
+            "@attributes(s='sensor',v='value')))" +
+            "define stream streamTemperature ( s string, v float);" +
+            "@sink(type='notification' , identifier='TEMPERATURE_DETAILS' , @map(type='keyvalue'," +
+            "@payload(message='Temperature is {{v}} taken from {{s}}')))" +
+            "define stream broadcastOutputStream (s string, v float); " +
             "from streamTemperature select * insert into broadcastOutputStream";
 
 
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("TEMPERATURE_DETAILS")) {
-                messageList.add("TEMPERATURE_DETAILS: " + intent.getStringExtra("events"));
+                messageList.add(intent.getStringExtra("events"));
                 listAdapter.notifyDataSetChanged();
                 Log.i("TEMPERATURE_DETAILS", intent.getStringExtra("events"));
             }

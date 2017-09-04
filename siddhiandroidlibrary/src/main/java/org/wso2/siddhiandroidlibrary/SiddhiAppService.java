@@ -87,4 +87,8 @@ public class SiddhiAppService extends Service {
         }
     }
 
+    public static int getAppIcon(){
+        return R.drawable.icon;
+    }
+
 }

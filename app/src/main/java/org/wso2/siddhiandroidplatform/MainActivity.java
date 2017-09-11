@@ -1,5 +1,6 @@
 package org.wso2.siddhiandroidplatform;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,8 +9,12 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +22,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import org.wso2.siddhiandroidlibrary.IRequestController;
+import org.wso2.siddhiandroidlibrary.SiddhiAppService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,23 +38,27 @@ public class MainActivity extends AppCompatActivity {
 
 //    private String inStreamDefinition = "" +
 //            "@app:name('foo2')" +
-//            "@source(type='temperature' , @map(type='passThrough'))" +
-//            "define stream streamTemperature ( sensor string, timestamp string, data string);" +
+//            "@source(type='broadcast-receiver',identifier='" + Intent.ACTION_BATTERY_LOW + "' , @map(type='passThrough'))" +
+//            "define stream streamTemperature ( k1 string, k2 string );" +
 //            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='passThrough'))" +
-//            "define stream broadcastOutputStream ( sensor string, timestamp string, data string); " +
-//            "from streamTemperature select sensor,timestamp,data insert into broadcastOutputStream";
-
+//            "define stream broadcastOutputStream (k1 string, k2 string); " +
+//            "from streamTemperature select k1,k2 insert into broadcastOutputStream";
+//    private String inStreamDefinition = "" +
+//            "@app:name('foo2')" +
+//            "@source(type='location',identifier='" + Intent.ACTION_BATTERY_LOW + "' , @map(type='keyvalue'))" +
+//            "define stream streamTemperature ( latitude double, longitude double );" +
+//            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='keyvalue'))" +
+//            "define stream broadcastOutputStream (latitude double, longitude double); " +
+//            "from streamTemperature select latitude,longitude insert into broadcastOutputStream";
     private String inStreamDefinition = "" +
             "@app:name('foo2')" +
             "@source(type='proximity', @map(type='keyvalue',fail.on.missing.attribute='false'," +
             "@attributes(s='sensor',v='value')))" +
             "define stream streamTemperature ( s string, v float);" +
-            "@sink(type='notification' , identifier='TEMPERATURE_DETAILS' , @map(type='keyvalue'," +
-            "@payload(message='Temperature is {{v}} taken from {{s}}')))" +
+            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='keyvalue'," +
+            "@payload(message='Proximity is {{v}} taken from {{s}}')))" +
             "define stream broadcastOutputStream (s string, v float); " +
             "from streamTemperature select * insert into broadcastOutputStream";
-
-
     private ListView listView;
     private ArrayList<String> messageList = new ArrayList<>();
     private ArrayAdapter<String> listAdapter;
@@ -63,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+    private final int MY_PERMISSION_ACCESS_LOCATION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +85,57 @@ public class MainActivity extends AppCompatActivity {
 
         listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, messageList);
         listView.setAdapter(listAdapter);
+
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("Location", "1");
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                Log.e("Permission", "Show details");
+
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSION_ACCESS_LOCATION);
+                Log.e("Location", "2");
+            }
+
+        }
+
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_ACCESS_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Log.e("Locatoin","Permission given");
+
+                } else {
+                    Log.e("Locatoin","Permission not given");
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override

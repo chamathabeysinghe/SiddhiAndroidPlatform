@@ -33,7 +33,6 @@ public class SiddhiAppService extends Service {
     private RequestController requestController=new RequestController();
     private LocalBinder localBinder=new LocalBinder();
     private AppManager appManager;
-
     public SiddhiAppService() {
         SiddhiAppService.instance=this;
         appManager=new AppManager();
@@ -57,19 +56,22 @@ public class SiddhiAppService extends Service {
 
         @Override
         public String startSiddhiApp(String definition, String identifier) throws RemoteException {
-            Runnable r=new Runnable() {
-                @Override
-                public void run() {
-                    appManager.startApp(definition,identifier);
-                }
-            };
 
-//            Runnable r= () -> {
-//                appManager.startApp(definition,identifier);
+            appManager.startApp(definition,identifier);
+//            Runnable r=new Runnable() {
+//                @Override
+//                public void run() {
+//                    Looper.prepare();
+//                    appManager.startApp(definition,identifier);
+//
+//
+//                }
 //            };
-            Thread t=new Thread(r);
-            t.setContextClassLoader(this.getClass().getClassLoader());
-            t.start();
+
+
+//            Thread t=new Thread(r);
+//            t.setContextClassLoader(this.getClass().getClassLoader());
+//            t.start();
             return "App Launched";
         }
 
@@ -90,5 +92,7 @@ public class SiddhiAppService extends Service {
     public static int getAppIcon(){
         return R.drawable.icon;
     }
+
+
 
 }

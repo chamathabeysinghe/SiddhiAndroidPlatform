@@ -2,6 +2,8 @@
 
     package="org.wso2.siddhiandroidlibrary">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application android:allowBackup="true" android:label="@string/app_name"
         android:supportsRtl="true">
 

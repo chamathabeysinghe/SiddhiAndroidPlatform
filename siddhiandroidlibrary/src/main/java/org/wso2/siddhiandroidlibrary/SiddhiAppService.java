@@ -18,17 +18,26 @@
 
 package org.wso2.siddhiandroidlibrary;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 
 
 public class SiddhiAppService extends Service {
 
     public static SiddhiAppService instance; //remove this
-
     public static final String LOCAL_PARAMETER_NAME="local-service";
     private RequestController requestController=new RequestController();
     private LocalBinder localBinder=new LocalBinder();
@@ -40,6 +49,24 @@ public class SiddhiAppService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationUtils mNotificationUtils = new NotificationUtils(this);
+        String event = "Sensor service started";
+        Notification n;
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            Notification.Builder nb = mNotificationUtils.getSiddhiChannelNotification("Event",event.toString());
+            n=nb.build();
+            mNotificationUtils.getManager().notify(201,n);
+            startForeground(201,n);
+        }
+        else{
+            n  = new NotificationCompat.Builder(this)
+                    .setContentTitle("Event")
+                    .setContentText(event.toString())
+                    .setSmallIcon(R.drawable.icon)
+                    .build();
+            mNotificationUtils.getManager().notify(202, n);
+            startForeground(202,n);
+        }
         return START_STICKY;
     }
 
@@ -93,6 +120,45 @@ public class SiddhiAppService extends Service {
         return R.drawable.icon;
     }
 
+}
+
+class NotificationUtils extends ContextWrapper {
+
+    private NotificationManager mManager;
+    public static final String SIDDHI_CHANNEL_ID = "org.wso2.SIDDHI";
+    public static final String SIDDHI_CHANNEL_NAME = "SIDDHI CHANNEL";
+
+    public NotificationUtils(Context base) {
+        super(base);
+        createChannels();
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void createChannels() {
+
+        NotificationChannel androidChannel = new NotificationChannel(SIDDHI_CHANNEL_ID,SIDDHI_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        androidChannel.enableLights(true);
+        androidChannel.enableVibration(true);
+        androidChannel.setLightColor(Color.GREEN);
+        androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        getManager().createNotificationChannel(androidChannel);
+
+    }
+
+    public NotificationManager getManager() {
+        if (mManager == null) {
+            mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        return mManager;
+    }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Notification.Builder getSiddhiChannelNotification(String title, String body) {
+        return new Notification.Builder(getApplicationContext(), SIDDHI_CHANNEL_ID)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(android.R.drawable.stat_notify_more)
+                .setAutoCancel(true);
+    }
 }

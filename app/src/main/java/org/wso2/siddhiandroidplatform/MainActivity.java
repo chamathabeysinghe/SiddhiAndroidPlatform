@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             "@source(type='proximity', @map(type='keyvalue',fail.on.missing.attribute='false'," +
             "@attributes(s='sensor',v='value')))" +
             "define stream streamTemperature ( s string, v float);" +
-            "@sink(type='broadcast' , identifier='TEMPERATURE_DETAILS' , @map(type='keyvalue'," +
+            "@sink(type='notification' , identifier='TEMPERATURE_DETAILS' , @map(type='keyvalue'," +
             "@payload(message='Proximity is {{v}} taken from {{s}}')))" +
             "define stream broadcastOutputStream (s string, v float); " +
             "from streamTemperature select * insert into broadcastOutputStream";
@@ -153,8 +153,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public void bindToSiddhiService(View view) {
         Toast.makeText(this, "Binding to the service", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(SIDDHI_SERVICE_IDENTIFIER);
-        bindService(convertIntent(intent), serviceCon, BIND_AUTO_CREATE);
+//        Intent intent = new Intent(SIDDHI_SERVICE_IDENTIFIER);
+//        bindService(convertIntent(intent), serviceCon, BIND_AUTO_CREATE);
+        Intent intent1=new Intent(this,SiddhiAppService.class);
+        startService(intent1);
+        bindService(intent1,serviceCon,BIND_AUTO_CREATE);
     }
 
     /**

@@ -74,47 +74,49 @@ dependencies {
 //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    implementation('org.wso2.siddhi:siddhi-core:4.0.0-M71-SNAPSHOT') {
+    implementation('org.wso2.siddhi:siddhi-core:4.0.0-M85-SNAPSHOT') {
 
         //exclude module: 'log4j'
         transitive = false
 
     }
 
-    annotationProcessor('org.wso2.siddhi:siddhi-annotations:4.0.0-M71-SNAPSHOT') {
+    annotationProcessor('org.wso2.siddhi:siddhi-annotations:4.0.0-M85-SNAPSHOT') {
 
         //exclude module:'siddhi-core'
         transitive = false
 
     }
-    implementation('org.wso2.siddhi:siddhi-annotations:4.0.0-M71-SNAPSHOT') {
+    implementation('org.wso2.siddhi:siddhi-annotations:4.0.0-M85-SNAPSHOT') {
         transitive = false
     }
-    implementation('org.wso2.siddhi:siddhi-query-api:4.0.0-M71-SNAPSHOT') {
+    implementation('org.wso2.siddhi:siddhi-query-api:4.0.0-M85-SNAPSHOT') {
 
         transitive = false
     }
-    implementation('org.wso2.siddhi:siddhi-query-compiler:4.0.0-M71-SNAPSHOT') {
+    implementation('org.wso2.siddhi:siddhi-query-compiler:4.0.0-M85-SNAPSHOT') {
         //exclude module : 'siddhi-query-api'
         transitive = false
     }
     implementation('org.wso2.extension.siddhi.map.text:siddhi-map-text:1.0.2') {
         transitive = false
     }
+    implementation('org.wso2.extension.siddhi.map.keyvalue:siddhi-map-keyvalue:1.0.1') {
+        transitive = false
+    }
 
-
-//    implementation "com.google.guava:guava:19.0"
+    implementation "com.google.guava:guava:19.0"
 //    implementation "com.google.code.gson:gson:2.8.0"
-//    implementation("org.apache.log4j.wso2:log4j:1.2.17.wso2v1") {
-//        transitive = false
-//    }
+    implementation("org.apache.log4j.wso2:log4j:1.2.17.wso2v1") {
+        transitive = false
+    }
 //
-//    implementation "org.osgi:org.osgi.core:6.0.0"
+    implementation "org.osgi:org.osgi.core:6.0.0"
 //    annotationProcessor("org.atteo.classindex:classindex:3.4") {
 //        // transitive = false;
 //    }
-//    implementation "org.wso2.orbit.com.lmax:disruptor:3.3.2.wso2v2"
-//    implementation "org.antlr:antlr4-runtime:4.5.1"
+    implementation "org.wso2.orbit.com.lmax:disruptor:3.3.2.wso2v2"
+    implementation "org.antlr:antlr4-runtime:4.5.1"
 
 
 }

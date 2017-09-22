@@ -130,7 +130,6 @@ class NotificationUtils extends ContextWrapper {
 
     public NotificationUtils(Context base) {
         super(base);
-        createChannels();
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -155,6 +154,7 @@ class NotificationUtils extends ContextWrapper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Notification.Builder getSiddhiChannelNotification(String title, String body) {
+        createChannels();
         return new Notification.Builder(getApplicationContext(), SIDDHI_CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)

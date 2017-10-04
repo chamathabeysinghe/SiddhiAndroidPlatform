@@ -17,14 +17,16 @@
  */
 package org.wso2.siddhiandroidlibrary;
 
+import android.util.Log;
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
+import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
+import org.wso2.siddhi.query.api.exception.SiddhiAppValidationException;
+
 import java.util.HashMap;
 
 
 public class AppManager {
-
-    //SiddhiAppManager
 
     private SiddhiManager siddhiManager;
     private volatile HashMap<String,SiddhiAppRuntime> siddhiAppList;
@@ -32,38 +34,50 @@ public class AppManager {
     public AppManager(){
         siddhiAppList=new HashMap<>();
         this.siddhiManager=new SiddhiManager();
-//        siddhiManager.setExtension("source:proximity",ProximitySensorSource.class);
-//        siddhiManager.setExtension("source:temperature",TemperatureSensorSource.class);
-//        siddhiManager.setExtension("sink:broadcast", BroadcastIntentSink.class);
     }
 
     /**
      * Start a new Siddhi App
      * @param inStream Siddhi App definition
-     * @param identifier unique identifier to identify the app
      */
-    public void startApp(String inStream,String identifier){
-        SiddhiAppRuntime siddhiAppRuntime=siddhiManager.createSiddhiAppRuntime(inStream);
-        synchronized (this){
-            if(siddhiAppList.containsKey(identifier)){  //what to do?
-                siddhiAppList.get(identifier).shutdown();
+    public boolean startApp(String inStream){
+
+        try{
+            SiddhiAppRuntime siddhiAppRuntime=siddhiManager.createSiddhiAppRuntime(inStream);
+            String appIdentifier = siddhiAppRuntime.getName();
+            if(siddhiAppList.containsKey(appIdentifier)){
+                siddhiAppList.get(appIdentifier).shutdown();
+                //stacktrace ??
+                Log.e("Siddhi Platform","Similar App name already exists ins the list");
+                return false;
             }
-            siddhiAppList.put(identifier,siddhiAppRuntime);
+            siddhiAppList.put(appIdentifier,siddhiAppRuntime);
+            siddhiAppRuntime.start();
+            return true;
+        }
+        catch (SiddhiAppCreationException e){
+            Log.e("Siddhi App Error",Log.getStackTraceString(e));
+            return false;
+        }
+        catch (SiddhiAppValidationException e){
+            Log.e("Siddhi App Error",Log.getStackTraceString(e));
+            return false;
         }
 
-        siddhiAppRuntime.start();
     }
 
     /**
      * Shutdown a running Siddhi App
-     * @param identifier unique identifier to identify the app (as previously provided when starting the app)
+     * @param appName unique identifier to identify the app (as previously provided when starting the app)
      */
-    public void stopApp(String identifier){
-        SiddhiAppRuntime siddhiAppRuntime;
-        synchronized (this){
-            siddhiAppRuntime=siddhiAppList.get(identifier);
-        }
+    public boolean stopApp(String appName){
+        SiddhiAppRuntime siddhiAppRuntime=siddhiAppList.get(appName);
 
+        if(siddhiAppRuntime==null){
+            Log.e("Siddhi Platform","No app with name, '"+appName+"', is currently executing. ");
+            return false;
+        }
         siddhiAppRuntime.shutdown();
+        return true;
     }
 }

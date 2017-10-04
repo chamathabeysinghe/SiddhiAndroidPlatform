@@ -5,6 +5,6 @@ package org.wso2.siddhiandroidlibrary;
 
 interface IRequestController {
 
-    String startSiddhiApp(String definition,String identifier);
-    String stopSiddhiApp(String identifier);
+    boolean startSiddhiApp(String definition,String identifier);
+    boolean stopSiddhiApp(String identifier);
 }

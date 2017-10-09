@@ -26,27 +26,27 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String APP_IDENTIFIER = "org.wso2.sampleapp";
+    private final String APP_IDENTIFIER = "foo";
 
     private DataUpdateReceiver dataUpdateReceiver;
     private String broadcastIdentifier = "TEMPERATURE_DETAILS";
+    private String inStreamDefinition = "" +
+            "@app:name('foo')" +
+            "@source(type='android-accelerometer', @map(type='keyvalue',fail.on.missing.attribute='false'," +
+            "@attributes(sensor='sensor',vector='accelerationX')))" +
+            "define stream streamTemperature ( sensor string, vector float);" +
+            "@sink(type='android-notification' , title='Acceleration Details',multiple.notifications = 'false', @map(type='keyvalue'))" +
+            "define stream broadcastOutputStream (sensor string, vector float); " +
+            "from streamTemperature select * insert into broadcastOutputStream";
+
 //    private String inStreamDefinition = "" +
 //            "@app:name('foo')" +
 //            "@source(type='android-accelerometer', @map(type='keyvalue',fail.on.missing.attribute='false'," +
 //            "@attributes(s='sensor',v='accelerationX')))" +
 //            "define stream streamTemperature ( s string, v float);" +
-//            "@sink(type='android-notification' , title='Hello World',multiple.notifications = 'true', @map(type='keyvalue'))" +
+//            "@sink(type='android-broadcast' , identifier='"+broadcastIdentifier+"' , @map(type='keyvalue'))" +
 //            "define stream broadcastOutputStream (s string, v float); " +
 //            "from streamTemperature select * insert into broadcastOutputStream";
-
-    private String inStreamDefinition = "" +
-            "@app:name('foo')" +
-            "@source(type='android-accelerometer', @map(type='keyvalue',fail.on.missing.attribute='false'," +
-            "@attributes(s='sensor',v='accelerationX')))" +
-            "define stream streamTemperature ( s string, v float);" +
-            "@sink(type='android-broadcast' , identifier='"+broadcastIdentifier+"' , @map(type='keyvalue'))" +
-            "define stream broadcastOutputStream (s string, v float); " +
-            "from streamTemperature select * insert into broadcastOutputStream";
 
     private ListView listView;
     private ArrayList<String> messageList = new ArrayList<>();

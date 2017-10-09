@@ -36,7 +36,7 @@ public class SiddhiAppService extends Service {
     public static SiddhiAppService instance;
     private RequestController requestController=new RequestController();
     private AppManager appManager;
-    public static final String SIDDHI_CHANNEL_ID = "org.wso2.SIDDHI";
+    public static final String SIDDHI_CHANNEL_ID = "org.wso2.ANDROID_SIDDHI_PLATFORM";
     public static final String NOTIFICATION_CHANNEL_NAME = "SIDDHI_CHANNEL";
     public static final int NOTIFICATION_ID = 100;
     public static final String NOTIFICATION_TITLE = "Siddhi";
@@ -50,16 +50,19 @@ public class SiddhiAppService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(
+                Context.NOTIFICATION_SERVICE);
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            NotificationChannel androidChannel = new NotificationChannel(SIDDHI_CHANNEL_ID,NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel androidChannel = new NotificationChannel(SIDDHI_CHANNEL_ID,
+                    NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             androidChannel.enableLights(true);
             androidChannel.enableVibration(true);
             androidChannel.setLightColor(Color.GREEN);
             androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             notificationManager.createNotificationChannel(androidChannel);
-            Notification.Builder nb = new Notification.Builder(getApplicationContext(), SIDDHI_CHANNEL_ID)
+            Notification.Builder nb = new Notification.Builder(getApplicationContext(),
+                    SIDDHI_CHANNEL_ID)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_BODY)
                     .setSmallIcon(android.R.drawable.stat_notify_more)
@@ -69,7 +72,8 @@ public class SiddhiAppService extends Service {
             startForeground(NOTIFICATION_ID,notification);
         }
         else{
-            Notification notification = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_NAME)
+            Notification notification = new NotificationCompat.Builder(this,
+                    NOTIFICATION_CHANNEL_NAME)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(NOTIFICATION_BODY)
                     .setSmallIcon(R.drawable.icon).build();

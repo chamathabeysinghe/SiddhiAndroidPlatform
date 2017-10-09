@@ -1,1 +1,1 @@
-include ':app', ':siddhiandroidlibrary'
+include ':app', ':platform'
